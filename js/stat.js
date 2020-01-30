@@ -1,8 +1,16 @@
-var CLOUD_WIDTH = 400;
+var CLOUD_WIDTH = 420;
 var CLOUD_HEIGHT = 270;
 var CLOUD_X = 100;
 var CLOUD_Y = 10;
 var GAP = 10;
+var WIDTH_COLUMN = 40;
+var BEETWEN_COLUMN = 50;
+var BAR_HEIGHT = 150;
+var BAR_Y = 90;
+
+var leftMargin = CLOUD_X + BEETWEN_COLUMN;
+var bottomMargin = CLOUD_HEIGHT - GAP;
+var columnPaddingBottom = 30;
 
 var renderCloud = function (ctx, x, y, color) {
   ctx.fillStyle = color;
@@ -10,30 +18,25 @@ var renderCloud = function (ctx, x, y, color) {
 };
 
 window.renderStatistics = function (ctx) {
-  renderCloud(ctx, CLOUD_X + GAP, CLOUD_Y + GAP, 'rgba(0, 0, 0, 0.6)')
+  renderCloud(ctx, CLOUD_X + GAP, CLOUD_Y + GAP, 'rgba(0, 0, 0, 0.7)')
   renderCloud(ctx, CLOUD_X, CLOUD_Y, '#fff');
 
   ctx.fillStyle = '#000';
-  ctx.fillText('Вы', 155, 260);
-  ctx.fillText('2725', 155, 130);
-  ctx.fillStyle = 'red';
-  ctx.fillRect(155, 140, 40, 100);
+  ctx.font = '16px PTMono';
+  ctx.fillText('Ура вы победили!', 120, 40);
+  ctx.fillText('Список результатов:', 120, 60);
 
-  ctx.fillStyle = '#000';
-  ctx.fillText('Кекс', 240, 260);
-  ctx.fillText('4025', 240, 90);
-  ctx.fillStyle = 'blue';
-  ctx.fillRect(240, 100, 40, 140);
+  var players = ['Вы', 'Кекс', 'Катя', 'Игорь'];
 
-  ctx.fillStyle = '#000';
-  ctx.fillText('Катя', 325, 260);
-  ctx.fillText('1244', 325, 190);
-  ctx.fillStyle = 'grey';
-  ctx.fillRect(325, 200, 40, 40);
+  for (var i = 0; i < players.length; i++) {
+    ctx.fillText(players[i], leftMargin + (WIDTH_COLUMN + BEETWEN_COLUMN) * i, bottomMargin);
+  }
 
-  ctx.fillStyle = '#000';
-  ctx.fillText('Игорь', 410, 260);
-  ctx.fillText('1339', 410, 180);
-  ctx.fillStyle = 'pink';
-  ctx.fillRect(410, 190, 40, 50);
+  var results = ['2725', '4025', '1244', '1339'];
+
+  for (var i = 0; i < results.length; i++) {
+    ctx.fillText(results[i], leftMargin + (WIDTH_COLUMN + BEETWEN_COLUMN) * i, CLOUD_HEIGHT - columnPaddingBottom - results[i] * 0.037 - GAP);
+    ctx.fillRect(leftMargin + (WIDTH_COLUMN + BEETWEN_COLUMN) * i, CLOUD_HEIGHT - columnPaddingBottom - results[i] * 0.037, WIDTH_COLUMN, results[i] * 0.037);
+  }
 };
+
