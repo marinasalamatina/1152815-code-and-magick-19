@@ -36,19 +36,19 @@ var stringPadding = headerY + TEXT_HEIGHT;
 var marginBottom = BAR_PADDING + BAR_HEIGHT_MAX;
 var barWidthMargin = BAR_WIDTH + BAR_GAP;
 
-// eslint-disable-next-line no-shadow
-var renderCloud = function (ctx, CLOUD_X, CLOUD_Y) {
+
+var renderCloud = function (ctx, x, y) {
   ctx.fillStyle = SHADOW_COLOR;
   ctx.fillRect(shadowX, shadowY, shadowWidth, shadowHeight);
   ctx.fillStyle = CLOUD_COLOR;
-  ctx.fillRect(CLOUD_X, CLOUD_Y, CLOUD_WIDTH, CLOUD_HEIGHT);
+  ctx.fillRect(x, y, CLOUD_WIDTH, CLOUD_HEIGHT);
 };
 
-// eslint-disable-next-line no-shadow
-var renderHeader = function (ctx, headerX, headerY) {
+
+var renderHeader = function (ctx, x, y) {
   ctx.fillStyle = TEXT_COLOR;
   ctx.font = FONT_FAMILY;
-  ctx.fillText('Ура вы победили!', headerX, headerY);
+  ctx.fillText('Ура вы победили!', x, y);
   ctx.fillText('Список результатов:', headerX, stringPadding);
 };
 
