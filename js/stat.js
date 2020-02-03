@@ -70,7 +70,7 @@ var getMaxValue = function (array) {
   return maxValue;
 };
 
-var renderBar = function (ctx, times, names) {
+var renderBars = function (ctx, times, names) {
   var getBarColor = function () {
     var barColor = (names[i] === 'Вы') ? YOU_BAR_COLOR : getHSL();
     return barColor;
@@ -96,5 +96,5 @@ var renderBar = function (ctx, times, names) {
 window.renderStatistics = function (ctx, names, times) {
   renderCloud(ctx, CLOUD_X, CLOUD_Y);
   renderHeader(ctx, headerX, headerY);
-  renderBar(ctx, times, names);
+  renderBars(ctx, times, names);
 };
