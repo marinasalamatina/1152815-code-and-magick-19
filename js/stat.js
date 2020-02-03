@@ -18,7 +18,7 @@ var BAR_GAP = 50;
 var TEXT_HEIGHT = 20;
 
 var TEXT_COLOR = '#000000';
-var YOU_BAR_COLOR = 'rgba(255, 0, 0, 1)';
+var PLAYER_BAR_COLOR = 'rgba(255, 0, 0, 1)';
 var FONT_FAMILY = '16px PT Mono';
 var HUE = 240;
 var LIGHTNESS = 50;
@@ -37,7 +37,7 @@ var marginBottom = BAR_PADDING + BAR_HEIGHT_MAX;
 var barWidthMargin = BAR_WIDTH + BAR_GAP;
 
 
-var renderCloud = function (ctx, x, y) {
+var getRenderCloud = function (ctx, x, y) {
   ctx.fillStyle = SHADOW_COLOR;
   ctx.fillRect(shadowX, shadowY, shadowWidth, shadowHeight);
   ctx.fillStyle = CLOUD_COLOR;
@@ -45,14 +45,14 @@ var renderCloud = function (ctx, x, y) {
 };
 
 
-var renderHeader = function (ctx, x, y) {
+var getRenderHeader = function (ctx, x, y) {
   ctx.fillStyle = TEXT_COLOR;
   ctx.font = FONT_FAMILY;
   ctx.fillText('Ура вы победили!', x, y);
   ctx.fillText('Список результатов:', headerX, stringPadding);
 };
 
-var getHSL = function () {
+var getRenderColor = function () {
   var saturation = Math.round(Math.random() * 100);
 
   return 'hsl(' + HUE + ', ' + saturation + '%, ' + LIGHTNESS + '%)';
@@ -70,9 +70,10 @@ var getMaxValue = function (array) {
   return maxValue;
 };
 
-var renderBars = function (ctx, times, names) {
+var getRenderBars = function (ctx, times, names) {
+
   var getBarColor = function () {
-    var barColor = (names[i] === 'Вы') ? YOU_BAR_COLOR : getHSL();
+    var barColor = (names[i] === 'Вы') ? PLAYER_BAR_COLOR : getRenderColor();
     return barColor;
   };
 
@@ -94,7 +95,7 @@ var renderBars = function (ctx, times, names) {
 };
 
 window.renderStatistics = function (ctx, names, times) {
-  renderCloud(ctx, CLOUD_X, CLOUD_Y);
-  renderHeader(ctx, headerX, headerY);
-  renderBars(ctx, times, names);
+  getRenderCloud(ctx, CLOUD_X, CLOUD_Y);
+  getRenderHeader(ctx, headerX, headerY);
+  getRenderBars(ctx, times, names);
 };
