@@ -79,18 +79,18 @@ var getRenderBars = function (ctx, times, names) {
 
   for (var i = 0; i < times.length; i += 1) {
     var maxTime = getMaxValue(times);
-    var certainheight = BAR_HEIGHT_MAX * times[i] / maxTime;
+    var certainHeight = BAR_HEIGHT_MAX * times[i] / maxTime;
     var barX = CLOUD_X + BAR_PADDING + barWidthMargin * i;
-    var barY = CLOUD_Y + BAR_PADDING + marginBottom - certainheight;
+    var barY = CLOUD_Y + BAR_PADDING + marginBottom - certainHeight;
     var nameY = CLOUD_Y + NAME_PADDING + marginBottom;
-    var timeY = CLOUD_Y + CLOUD_PADDING_Y + marginBottom - certainheight;
+    var timeY = CLOUD_Y + CLOUD_PADDING_Y + marginBottom - certainHeight;
 
     ctx.fillStyle = TEXT_COLOR;
     ctx.fillText(Math.round(times[i]), barX, timeY);
     ctx.fillText(names[i], barX, nameY);
 
     ctx.fillStyle = getBarColor();
-    ctx.fillRect(barX, barY, BAR_WIDTH, certainheight);
+    ctx.fillRect(barX, barY, BAR_WIDTH, certainHeight);
   }
 };
 
