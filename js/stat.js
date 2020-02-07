@@ -23,7 +23,7 @@ var FONT_FAMILY = '16px PT Mono';
 var HUE = 240;
 var LIGHTNESS = 50;
 
-var getRenderCloud = function (ctx, x, y) {
+var renderCloud = function (ctx, x, y) {
   var shadowX = CLOUD_X + CLOUD_GAP;
   var shadowY = CLOUD_Y + CLOUD_GAP;
 
@@ -37,7 +37,7 @@ var getRenderCloud = function (ctx, x, y) {
 };
 
 
-var getRenderHeader = function (ctx, x, y) {
+var renderHeader = function (ctx, x, y) {
   var headerX = x + CLOUD_PADDING_X;
   var headerY = y + CLOUD_PADDING_Y;
   var stringPadding = headerY + TEXT_HEIGHT;
@@ -48,21 +48,16 @@ var getRenderHeader = function (ctx, x, y) {
   ctx.fillText('Список результатов:', headerX, stringPadding);
 };
 
-var getRenderBar = function (ctx, x, y, width, height, color) {
+var renderBar = function (ctx, x, y, width, height, color) {
   ctx.fillStyle = color;
   ctx.fillRect(x, y, width, height, color);
 };
 
-var getRenderBars = function (ctx, times, names) {
+var renderBars = function (ctx, times, names) {
   var marginBottom = BAR_PADDING + BAR_HEIGHT_MAX;
   var barWidthMargin = BAR_WIDTH + BAR_GAP;
 
-  var getBarColor = function () {
-    var barColor = (names[i] === 'Вы') ? PLAYER_BAR_COLOR : getRenderColor();
-    return barColor;
-  };
-
-  var getRenderColor = function () {
+  var getRandomColor = function () {
     var saturation = Math.round(Math.random() * 100);
 
     return 'hsl(' + HUE + ', ' + saturation + '%, ' + LIGHTNESS + '%)';
@@ -88,16 +83,18 @@ var getRenderBars = function (ctx, times, names) {
     var nameY = CLOUD_Y + NAME_PADDING + marginBottom;
     var timeY = CLOUD_Y + CLOUD_PADDING_Y + marginBottom - certainHeight;
 
+    var barColor = (names[i] === 'Вы') ? PLAYER_BAR_COLOR : getRandomColor();
+
     ctx.fillStyle = TEXT_COLOR;
     ctx.fillText(Math.round(times[i]), barX, timeY);
     ctx.fillText(names[i], barX, nameY);
 
-    getRenderBar(ctx, barX, barY, BAR_WIDTH, certainHeight, getBarColor());
+    renderBar(ctx, barX, barY, BAR_WIDTH, certainHeight, barColor);
   }
 };
 
 window.renderStatistics = function (ctx, names, times) {
-  getRenderCloud(ctx, CLOUD_X, CLOUD_Y);
-  getRenderHeader(ctx, CLOUD_X, CLOUD_Y);
-  getRenderBars(ctx, times, names);
+  renderCloud(ctx, CLOUD_X, CLOUD_Y);
+  renderHeader(ctx, CLOUD_X, CLOUD_Y);
+  renderBars(ctx, times, names);
 };
