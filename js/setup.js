@@ -4,9 +4,9 @@ var WIZARD_NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'К
 var WIZARD_SURNAMES = ['Да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
 var WIZARD_COAT_COLOR = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
 var WIZARD_EYES_COLOR = ['black', 'red', 'blue', 'yellow', 'green'];
-
 var NUMBER_WIZARDS = 4;
 
+var userDialog = document.querySelector('.setup');
 var similarListElement = document.querySelector('.setup-similar-list');
 var similarWizardTemplate = document.querySelector('#similar-wizard-template').content;
 
@@ -18,26 +18,24 @@ var getRandomElement = function (array) {
   return array[getRandomNumber(array)];
 };
 
-var getAttributeWizard = function () {
-  var wizard = {
+var getWizardData = function () {
+  var wizardData = {
     name: getRandomElement(WIZARD_NAMES),
     surname: getRandomElement(WIZARD_SURNAMES),
     coatColor: getRandomElement(WIZARD_COAT_COLOR),
     eyesColor: getRandomElement(WIZARD_EYES_COLOR)
   };
 
-  return wizard;
+  return wizardData;
 };
 
-var makeWizardsArray = function () {
-  var wizards = [];
+var getWizardsData = function () {
+  var wizardsData = [];
   for (var i = 0; i < NUMBER_WIZARDS; i += 1) {
-    wizards.push(getAttributeWizard());
+    wizardsData.push(getWizardData());
   }
-  return wizards;
+  return wizardsData;
 };
-
-var wizards = makeWizardsArray();
 
 var createWizard = function (dataWizard) {
   var wizard = similarWizardTemplate.cloneNode(true);
@@ -50,17 +48,17 @@ var createWizard = function (dataWizard) {
   return wizard;
 };
 
-var createFragment = function () {
+var addWizardsData = function () {
   var fragment = document.createDocumentFragment();
+  var wizardsData = getWizardsData();
 
-  for (var i = 0; i < wizards.length; i += 1) {
-    fragment.appendChild(createWizard(wizards[i]));
+  for (var i = 0; i < wizardsData.length; i += 1) {
+    fragment.appendChild(createWizard(wizardsData[i]));
   }
   return fragment;
 };
 
-similarListElement.appendChild(createFragment());
+similarListElement.appendChild(addWizardsData());
 
-var userDialog = document.querySelector('.setup');
 userDialog.classList.remove('hidden');
 userDialog.querySelector('.setup-similar').classList.remove('hidden');
