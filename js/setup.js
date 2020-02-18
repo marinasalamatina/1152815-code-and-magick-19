@@ -7,7 +7,7 @@ var WIZARD_EYES_COLOR = ['black', 'red', 'blue', 'yellow', 'green'];
 var NUMBER_WIZARDS = 4;
 
 var userDialog = document.querySelector('.setup');
-var similarListElement = document.querySelector('.setup-similar-list');
+var wizardsContainer = document.querySelector('.setup-similar-list');
 var similarWizardTemplate = document.querySelector('#similar-wizard-template').content;
 
 var getRandomNumber = function (array) {
@@ -43,7 +43,7 @@ var createWizard = function (wizardData) {
   return wizard;
 };
 
-var addWizardsData = function () {
+var createWizards = function () {
   var fragment = document.createDocumentFragment();
   var wizardsData = getWizardsData();
 
@@ -53,7 +53,13 @@ var addWizardsData = function () {
   return fragment;
 };
 
-similarListElement.appendChild(addWizardsData());
+var setWizards = function () {
+  var wizards = createWizards();
 
-userDialog.classList.remove('hidden');
-userDialog.querySelector('.setup-similar').classList.remove('hidden');
+  wizardsContainer.appendChild(wizards);
+  userDialog.classList.remove('hidden');
+  userDialog.querySelector('.setup-similar').classList.remove('hidden');
+};
+
+setWizards();
+
