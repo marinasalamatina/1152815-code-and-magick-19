@@ -98,6 +98,7 @@ var openUserDialog = function () {
 
 var closeUserDialog = function () {
   userDialog.classList.add('hidden');
+  document.removeEventListener('keydown', onUserDialogEscPress);
 };
 
 setupOpen.addEventListener('click', function () {
