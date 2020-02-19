@@ -83,10 +83,10 @@ var setWizards = function () {
 setWizards();
 
 var onUserDialogEscPress = function (evt) {
+  if (userName === document.activeElement) {
+    return;
+  }
   if (evt.keyCode === ESC_KEYCODE) {
-    if (userName === document.activeElement) {
-      return;
-    }
     closeUserDialog();
   }
 };
@@ -98,7 +98,6 @@ var openUserDialog = function () {
 
 var closeUserDialog = function () {
   userDialog.classList.add('hidden');
-  document.removeEventListener('keydown', onUserDialogEscPress);
 };
 
 setupOpen.addEventListener('click', function () {
@@ -121,22 +120,23 @@ setupClose.addEventListener('keydown', function (evt) {
   }
 });
 
-var setColor = function (item, input, array) {
-  var color = getRandomElement(array);
+var setColor = function (item, input, color) {
   item.style.fill = color;
   item.style.backgroundColor = color;
   input.value = color;
 };
 
 wizardCoat.addEventListener('click', function () {
-  setColor(wizardCoat, wizardCoatInput, WIZARD_COAT_COLORS);
+  var color = getRandomElement(WIZARD_COAT_COLORS);
+  setColor(wizardCoat, wizardCoatInput, color);
 });
 
 wizardEyes.addEventListener('click', function () {
-  setColor(wizardEyes, wizardEyesInput, WIZARD_EYES_COLORS);
+  var color = getRandomElement(WIZARD_EYES_COLORS);
+  setColor(wizardEyes, wizardEyesInput, color);
 });
 
 wizardFireball.addEventListener('click', function () {
-  setColor(wizardFireball, wizardFireballInput, FIREBALL_COLORS);
+  var color = getRandomElement(FIREBALL_COLORS);
+  setColor(wizardFireball, wizardFireballInput, color);
 });
-
