@@ -7,9 +7,6 @@ var WIZARD_EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
 var FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#848d5', '#e6e848'];
 var NUMBER_WIZARDS = 4;
 
-var ESC_KEYCODE = 27;
-var ENTER_KEYCODE = 13;
-
 var userDialog = document.querySelector('.setup');
 
 var setupOpen = document.querySelector('.setup-open');
@@ -86,7 +83,7 @@ var onUserDialogEscPress = function (evt) {
   if (userName === document.activeElement) {
     return;
   }
-  if (evt.keyCode === ESC_KEYCODE) {
+  if (evt.key === 'Escape') {
     closeUserDialog();
   }
 };
@@ -106,7 +103,7 @@ setupOpen.addEventListener('click', function () {
 });
 
 setupOpen.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
+  if (evt.key === 'Enter') {
     openUserDialog();
   }
 });
@@ -116,7 +113,7 @@ setupClose.addEventListener('click', function () {
 });
 
 setupClose.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
+  if (evt.key === 'Enter') {
     closeUserDialog();
   }
 });
