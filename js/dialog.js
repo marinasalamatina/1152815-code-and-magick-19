@@ -6,6 +6,7 @@
   var setupOpen = document.querySelector('.setup-open');
   var setupClose = userDialog.querySelector('.setup-close');
   var userName = userDialog.querySelector('.setup-user-name');
+  var userDialogStartPosition = 'top: 80px; left: 50%;';
 
   var onUserDialogEscPress = function (evt) {
     if (userName === document.activeElement) {
@@ -18,6 +19,7 @@
 
   var openUserDialog = function () {
     userDialog.classList.remove('hidden');
+    userDialog.style.cssText = userDialogStartPosition;
     document.addEventListener('keydown', onUserDialogEscPress);
   };
 
