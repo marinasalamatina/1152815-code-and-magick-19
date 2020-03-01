@@ -22,12 +22,12 @@
   };
 
   wizardCoat.addEventListener('click', function () {
-    var color = window.utils.getRandomElement(window.setup.WIZARD_COAT_COLORS);
+    var color = window.setup.getColorCoat();
     setColor(wizardCoat, wizardCoatInput, color);
   });
 
   wizardEyes.addEventListener('click', function () {
-    var color = window.utils.getRandomElement(window.setup.WIZARD_EYES_COLORS);
+    var color = window.setup.getColorEyes();
     setColor(wizardEyes, wizardEyesInput, color);
   });
 
