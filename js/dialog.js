@@ -53,29 +53,64 @@
     evtMousedown.preventDefault();
 
     var startCoordinates = {
-      x: evtMousedown.clientX,
-      y: evtMousedown.clientY
+      x: evtMousedown.clientX - userDialog.offsetLeft,
+      y: evtMousedown.clientY - userDialog.offsetTop
     };
 
     var dragged = false;
 
     var onDocumentMouseMove = function (evtMouseMove) {
       evtMouseMove.preventDefault();
-      dragged = true;
+
+      var userDialogWidth = userDialog.offsetWidth;
+      var userDialogHeight = userDialog.offsetHeight;
+
+      var screenWidth = window.screen.availWidth;
+      var screenHeight = window.screen.availHeight;
+
+      var userDialogMinShift = {
+        x: evtMouseMove.clientX - startCoordinates.x,
+        y: evtMouseMove.clientY - startCoordinates.y
+      };
+
+      var userDialogMaxShift = {
+        x: evtMouseMove.clientX + userDialogWidth,
+        y: evtMouseMove.clientY - startCoordinates.y + userDialogHeight
+      };
+
+      var coordinatesAfterMiddleShift = {
+        x: evtMouseMove.clientX - startCoordinates.x,
+        y: evtMouseMove.clientY - startCoordinates.y
+      };
+
+      var coordinatesAfterMaxShift = {
+        x: screenWidth - startCoordinates.x - userDialogWidth,
+        y: screenHeight - userDialogHeight
+      };
 
       var shift = {
-        x: startCoordinates.x - evtMouseMove.clientX,
-        y: startCoordinates.y - evtMouseMove.clientY
+        x: 0,
+        y: 0
       };
 
-      startCoordinates = {
-        x: evtMouseMove.clientX,
-        y: evtMouseMove.clientY
-      };
+      if (userDialogMinShift.x < shift.x) {
+        shift.x = shift.x;
+      } else if (userDialogMaxShift.x > screenWidth) {
+        shift.x = coordinatesAfterMaxShift.x;
+      } else {
+        shift.x = coordinatesAfterMiddleShift.x;
+      }
 
-      userDialog.style.top = (userDialog.offsetTop - shift.y) + 'px';
-      userDialog.style.left = (userDialog.offsetLeft - shift.x) + 'px';
+      if (userDialogMinShift.y < shift.y) {
+        shift.y = shift.y;
+      } else if (userDialogMaxShift.y > screenHeight) {
+        shift.y = coordinatesAfterMaxShift.y;
+      } else {
+        shift.y = coordinatesAfterMiddleShift.y;
+      }
 
+      userDialog.style.top = shift.y + 'px';
+      userDialog.style.left = shift.x + 'px';
     };
 
     var onDocumentMouseUp = function (evtMouseup) {
