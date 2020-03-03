@@ -9,6 +9,13 @@
   var userDialogStartPosition = 'top: 80px; left: 50%;';
   var upload = userDialog.querySelector('.upload');
 
+  var startCoordinates = {
+    left: null,
+    top: null
+  };
+
+  var dragged = false;
+
   var closeUserDialog = function () {
     userDialog.classList.add('hidden');
     document.removeEventListener('keydown', onUserDialogEscPress);
@@ -49,85 +56,73 @@
     }
   });
 
+  var moveObject = function (evt, objectDraggable) {
+    var screenWidth = window.innerWidth;
+    var screenHeight = window.innerHeight;
+
+    var objectDraggableCoordinates = objectDraggable.getBoundingClientRect();
+    var objectDraggableWidth = objectDraggableCoordinates.width;
+    var objectDraggableHeight = objectDraggableCoordinates.height;
+    var objectDraggableHalfWidth = objectDraggableWidth / 2;
+
+    var objectDraggableMinShift = {
+      x: objectDraggableHalfWidth,
+      y: 0
+    };
+
+    var objectDraggableMaxShift = {
+      x: screenWidth - objectDraggableHalfWidth,
+      y: screenHeight - objectDraggableHeight
+    };
+
+    if (evt.clientX <= objectDraggableMinShift.x) {
+      startCoordinates.left = objectDraggableHalfWidth;
+    } else if (evt.clientX >= objectDraggableMaxShift.x) {
+      startCoordinates.left = objectDraggableMaxShift.x;
+    } else {
+      startCoordinates.left = evt.clientX;
+    }
+
+    if (evt.clientY <= objectDraggableMinShift.y) {
+      startCoordinates.top = 0;
+    } else if (evt.clientY >= objectDraggableMaxShift.y) {
+      startCoordinates.top = objectDraggableMaxShift.y;
+    } else {
+      startCoordinates.top = evt.clientY;
+    }
+
+    objectDraggable.style.left = startCoordinates.left + 'px';
+    objectDraggable.style.top = startCoordinates.top + 'px';
+  };
+
+  var onDocumentMouseMove = function (evtMousemove) {
+    evtMousemove.preventDefault();
+
+    moveObject(evtMousemove, userDialog);
+  };
+
+  var onDocumentMouseUp = function (evtMouseup) {
+    evtMouseup.preventDefault();
+
+    document.removeEventListener('mousemove', onDocumentMouseMove);
+    document.removeEventListener('mouseup', onDocumentMouseUp);
+
+    if (dragged) {
+      var onClickPreventDefault = function (evtDragged) {
+        evtDragged.preventDefault();
+        upload.removeEventListener('click', onClickPreventDefault);
+      };
+      upload.addEventListener('click', onClickPreventDefault);
+    }
+
+  };
+
   var onUploadMousedown = function (evtMousedown) {
     evtMousedown.preventDefault();
 
-    var startCoordinates = {
-      x: evtMousedown.clientX - userDialog.offsetLeft,
-      y: evtMousedown.clientY - userDialog.offsetTop
-    };
-
-    var dragged = false;
-
-    var onDocumentMouseMove = function (evtMouseMove) {
-      evtMouseMove.preventDefault();
-
-      var userDialogWidth = userDialog.offsetWidth;
-      var userDialogHeight = userDialog.offsetHeight;
-
-      var screenWidth = window.screen.availWidth;
-      var screenHeight = window.screen.availHeight;
-
-      var userDialogMinShift = {
-        x: evtMouseMove.clientX - startCoordinates.x,
-        y: evtMouseMove.clientY - startCoordinates.y
-      };
-
-      var userDialogMaxShift = {
-        x: evtMouseMove.clientX + userDialogWidth,
-        y: evtMouseMove.clientY - startCoordinates.y + userDialogHeight
-      };
-
-      var coordinatesAfterMiddleShift = {
-        x: evtMouseMove.clientX - startCoordinates.x,
-        y: evtMouseMove.clientY - startCoordinates.y
-      };
-
-      var coordinatesAfterMaxShift = {
-        x: screenWidth - startCoordinates.x - userDialogWidth,
-        y: screenHeight - userDialogHeight
-      };
-
-      var shift = {
-        x: 0,
-        y: 0
-      };
-
-      if (userDialogMinShift.x < shift.x) {
-        shift.x = shift.x;
-      } else if (userDialogMaxShift.x > screenWidth) {
-        shift.x = coordinatesAfterMaxShift.x;
-      } else {
-        shift.x = coordinatesAfterMiddleShift.x;
-      }
-
-      if (userDialogMinShift.y < shift.y) {
-        shift.y = shift.y;
-      } else if (userDialogMaxShift.y > screenHeight) {
-        shift.y = coordinatesAfterMaxShift.y;
-      } else {
-        shift.y = coordinatesAfterMiddleShift.y;
-      }
-
-      userDialog.style.top = shift.y + 'px';
-      userDialog.style.left = shift.x + 'px';
-    };
-
-    var onDocumentMouseUp = function (evtMouseup) {
-      evtMouseup.preventDefault();
-
-      document.removeEventListener('mousemove', onDocumentMouseMove);
-      document.removeEventListener('mouseup', onDocumentMouseUp);
-
-      if (dragged) {
-        var onClickPreventDefault = function (evtDragged) {
-          evtDragged.preventDefault();
-          upload.removeEventListener('click', onClickPreventDefault);
-        };
-        upload.addEventListener('click', onClickPreventDefault);
-      }
-
-    };
+    var userDialogCoordinates = userDialog.getBoundingClientRect();
+    startCoordinates.left = evtMousedown.clientX - userDialogCoordinates.left;
+    startCoordinates.top = evtMousedown.clientY - userDialogCoordinates.top;
 
     document.addEventListener('mousemove', onDocumentMouseMove);
     document.addEventListener('mouseup', onDocumentMouseUp);
