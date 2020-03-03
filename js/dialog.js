@@ -76,7 +76,7 @@
     };
 
     if (evt.clientX <= objectDraggableMinShift.x) {
-      startCoordinates.left = objectDraggableHalfWidth;
+      startCoordinates.left = objectDraggableMinShift.x;
     } else if (evt.clientX >= objectDraggableMaxShift.x) {
       startCoordinates.left = objectDraggableMaxShift.x;
     } else {
@@ -84,7 +84,7 @@
     }
 
     if (evt.clientY <= objectDraggableMinShift.y) {
-      startCoordinates.top = 0;
+      startCoordinates.top = objectDraggableMinShift.y;
     } else if (evt.clientY >= objectDraggableMaxShift.y) {
       startCoordinates.top = objectDraggableMaxShift.y;
     } else {
