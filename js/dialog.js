@@ -64,6 +64,10 @@
     var objectDraggableWidth = objectDraggableCoordinates.width;
     var objectDraggableHeight = objectDraggableCoordinates.height;
     var objectDraggableHalfWidth = objectDraggableWidth / 2;
+    console.log(objectDraggableCoordinates);
+
+    var coordinateXRelativeMap = evt.clientX + objectDraggableHalfWidth;
+    var coordinateYRelativeMap = evt.clientY;
 
     var objectDraggableMinShift = {
       x: objectDraggableHalfWidth,
@@ -75,20 +79,20 @@
       y: screenHeight - objectDraggableHeight
     };
 
-    if (evt.clientX <= objectDraggableMinShift.x) {
+    if (coordinateXRelativeMap <= objectDraggableMinShift.x) {
       startCoordinates.left = objectDraggableMinShift.x;
-    } else if (evt.clientX >= objectDraggableMaxShift.x) {
+    } else if (coordinateXRelativeMap >= objectDraggableMaxShift.x) {
       startCoordinates.left = objectDraggableMaxShift.x;
     } else {
-      startCoordinates.left = evt.clientX;
+      startCoordinates.left = coordinateXRelativeMap;
     }
 
-    if (evt.clientY <= objectDraggableMinShift.y) {
+    if (coordinateYRelativeMap <= objectDraggableMinShift.y) {
       startCoordinates.top = objectDraggableMinShift.y;
-    } else if (evt.clientY >= objectDraggableMaxShift.y) {
+    } else if (coordinateYRelativeMap >= objectDraggableMaxShift.y) {
       startCoordinates.top = objectDraggableMaxShift.y;
     } else {
-      startCoordinates.top = evt.clientY;
+      startCoordinates.top = coordinateYRelativeMap;
     }
 
     objectDraggable.style.left = startCoordinates.left + 'px';
