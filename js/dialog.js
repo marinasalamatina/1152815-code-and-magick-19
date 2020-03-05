@@ -8,6 +8,7 @@
   var userName = userDialog.querySelector('.setup-user-name');
   var userDialogStartPosition = 'top: 80px; left: 50%;';
   var upload = userDialog.querySelector('.upload');
+  var objectDraggableMinShiftY = 0;
 
   var startCoordinates = {
     left: null,
@@ -64,14 +65,13 @@
     var objectDraggableWidth = objectDraggableCoordinates.width;
     var objectDraggableHeight = objectDraggableCoordinates.height;
     var objectDraggableHalfWidth = objectDraggableWidth / 2;
-    console.log(objectDraggableCoordinates);
 
     var coordinateXRelativeMap = evt.clientX + objectDraggableHalfWidth;
     var coordinateYRelativeMap = evt.clientY;
 
     var objectDraggableMinShift = {
       x: objectDraggableHalfWidth,
-      y: 0
+      y: objectDraggableMinShiftY
     };
 
     var objectDraggableMaxShift = {
@@ -133,4 +133,8 @@
   };
 
   upload.addEventListener('mousedown', onUploadMousedown);
+
+  window.dialog = {
+    closeUserDialog: closeUserDialog
+  };
 })();
