@@ -9,9 +9,9 @@
 
   var similarWizardTemplate = document.querySelector('#similar-wizard-template').content;
   var wizardsContainer = document.querySelector('.setup-similar-list');
+  var errorWindow = document.createElement('div');
 
-  var fontSizeErrorMessage = '50px';
-  var errorWindowPositionLeftAndRight = 0;
+  var fontSizeErrorMessage = '22px';
 
   var createWizard = function (wizardData) {
     var wizard = similarWizardTemplate.cloneNode(true);
@@ -24,17 +24,28 @@
     return wizard;
   };
 
-  var onError = function (errorMessage) {
-    var errorWindow = document.createElement('div');
+  var onErrorWindowClick = function () {
+    errorWindow.removeEventListener('click', onErrorWindowClick);
+    document.body.removeChild(errorWindow);
+  };
 
-    errorWindow.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
+  var onErrorWindowKeydown = function (evt) {
+    if (evt.key === 'Escape') {
+      document.removeEventListener('keydown', onErrorWindowKeydown);
+      onErrorWindowClick();
+    }
+  };
+
+  var onError = function (errorMessage) {
+    errorWindow.style = 'display: flex; z-index: 100; justify-content: center; align-items: center; background-color: black; opacity: 0.9; width: 100%; top: 35%; height: 30%;';
     errorWindow.style.position = 'absolute';
-    errorWindow.style.left = errorWindowPositionLeftAndRight;
-    errorWindow.style.right = errorWindowPositionLeftAndRight;
     errorWindow.style.fontSize = fontSizeErrorMessage;
     errorWindow.textContent = 'Операция не выполнена. ' + errorMessage;
 
     document.body.appendChild(errorWindow);
+
+    errorWindow.addEventListener('click', onErrorWindowClick);
+    document.addEventListener('keydown', onErrorWindowKeydown);
   };
 
   var onLoad = function (wizards) {
@@ -48,10 +59,10 @@
   };
 
   form.addEventListener('submit', function (evt) {
-    setupSubmit.disabled = true;
+    setupSubmit.setAttribute('disabled', '');
     window.backend.save(new FormData(form), function () {
       window.dialog.closeUserDialog();
-      setupSubmit.disabled = false;
+      setupSubmit.removeAttribute('disabled');
     },
     onError);
     evt.preventDefault();

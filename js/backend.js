@@ -3,7 +3,7 @@
 (function () {
   var SAVE_URL = 'https://js.dump.academy/code-and-magick';
   var LOAD_URL = 'https://js.dump.academy/code-and-magick/data';
-  var MAX_TYPE = 1;
+  var MAX_TYPE = 10000;
   var SUCCESS_CODE = 200;
 
   var createXhr = function (xhr, url, type, onLoad, onError) {
