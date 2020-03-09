@@ -1,67 +1,72 @@
 'use strict';
 
 (function () {
-  var WIZARD_NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
-  var WIZARD_SURNAMES = ['Да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
-  var WIZARD_COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
-  var WIZARD_EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
-
   var NUMBER_WIZARDS = 4;
 
-  var wizardsContainer = document.querySelector('.setup-similar-list');
-  var similarWizardTemplate = document.querySelector('#similar-wizard-template').content;
   var userDialog = document.querySelector('.setup');
+  var form = userDialog.querySelector('form');
+  var setupSubmit = userDialog.querySelector('.setup-submit');
 
-  var getWizardsData = function () {
-    var wizardsData = [];
-    for (var i = 0; i < NUMBER_WIZARDS; i += 1) {
-      var wizardData = {
-        name: window.utils.getRandomElement(WIZARD_NAMES),
-        surname: window.utils.getRandomElement(WIZARD_SURNAMES),
-        coatColor: window.utils.getRandomElement(WIZARD_COAT_COLORS),
-        eyesColor: window.utils.getRandomElement(WIZARD_EYES_COLORS)
-      };
-      wizardsData.push(wizardData);
-    }
-    return wizardsData;
-  };
+  var similarWizardTemplate = document.querySelector('#similar-wizard-template').content;
+  var wizardsContainer = document.querySelector('.setup-similar-list');
+  var errorWindow = document.createElement('div');
+
+  var fontSizeErrorMessage = '22px';
 
   var createWizard = function (wizardData) {
     var wizard = similarWizardTemplate.cloneNode(true);
 
-    wizard.querySelector('.setup-similar-label').textContent = wizardData.name + '  ' + wizardData.surname;
+    wizard.querySelector('.setup-similar-label').textContent = wizardData.name;
 
-    wizard.querySelector('.wizard-coat').style.fill = wizardData.coatColor;
-    wizard.querySelector('.wizard-eyes').style.fill = wizardData.eyesColor;
+    wizard.querySelector('.wizard-coat').style.fill = wizardData.colorCoat;
+    wizard.querySelector('.wizard-eyes').style.fill = wizardData.colorEyes;
 
     return wizard;
   };
 
-  var createWizards = function () {
-    var fragment = document.createDocumentFragment();
-    var wizardsData = getWizardsData();
-
-    for (var i = 0; i < wizardsData.length; i += 1) {
-      fragment.appendChild(createWizard(wizardsData[i]));
-    }
-    return fragment;
+  var onErrorWindowClick = function () {
+    errorWindow.removeEventListener('click', onErrorWindowClick);
+    document.body.removeChild(errorWindow);
   };
 
-  var setWizards = function () {
-    var wizards = createWizards();
+  var onErrorWindowKeydown = function (evt) {
+    if (evt.key === 'Escape') {
+      document.removeEventListener('keydown', onErrorWindowKeydown);
+      onErrorWindowClick();
+    }
+  };
 
-    wizardsContainer.appendChild(wizards);
+  var onError = function (errorMessage) {
+    errorWindow.style = 'display: flex; z-index: 100; justify-content: center; align-items: center; background-color: black; opacity: 0.9; width: 100%; top: 35%; height: 30%;';
+    errorWindow.style.position = 'absolute';
+    errorWindow.style.fontSize = fontSizeErrorMessage;
+    errorWindow.textContent = 'Операция не выполнена. ' + errorMessage;
+
+    document.body.appendChild(errorWindow);
+
+    errorWindow.addEventListener('click', onErrorWindowClick);
+    document.addEventListener('keydown', onErrorWindowKeydown);
+  };
+
+  var onLoad = function (wizards) {
+    var fragment = document.createDocumentFragment();
+
+    for (var i = 0; i < NUMBER_WIZARDS; i += 1) {
+      fragment.appendChild(createWizard(wizards[i]));
+    }
+    wizardsContainer.appendChild(fragment);
     userDialog.querySelector('.setup-similar').classList.remove('hidden');
   };
 
-  setWizards();
-
-  window.setup = {
-    getColorCoat: function () {
-      return window.utils.getRandomElement(WIZARD_COAT_COLORS);
+  form.addEventListener('submit', function (evt) {
+    setupSubmit.setAttribute('disabled', '');
+    window.backend.save(new FormData(form), function () {
+      window.dialog.closeUserDialog();
+      setupSubmit.removeAttribute('disabled');
     },
-    getColorEyes: function () {
-      return window.utils.getRandomElement(WIZARD_EYES_COLORS);
-    }
-  };
+    onError);
+    evt.preventDefault();
+  });
+
+  window.backend.load(onLoad, onError);
 })();
