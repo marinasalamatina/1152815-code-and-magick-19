@@ -18,9 +18,22 @@
     return level;
   };
 
+  var sortNames = function (left, right) {
+    if (left > right) {
+      return 1;
+    } else if (left < right) {
+      return -1;
+    } else {
+      return 0;
+    }
+  };
 
   var sortWizards = function (left, right) {
     var difference = calculateLevel(right) - calculateLevel(left);
+
+    if (difference === 0) {
+      difference = sortNames(left.name, right.name);
+    }
 
     return difference;
   };
