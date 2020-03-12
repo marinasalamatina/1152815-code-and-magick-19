@@ -24,19 +24,39 @@
     return wizard;
   };
 
+  var createWizards = function (wizards) {
+    var fragment = document.createDocumentFragment();
+    window.similarWizards = wizards;
+    wizards.sort(window.filter.sortWizards);
+
+    for (var i = 0; i < NUMBER_WIZARDS; i += 1) {
+      fragment.appendChild(window.setup.createWizard(wizards[i]));
+    }
+
+    wizardsContainer.innerHTML = '';
+    wizardsContainer.appendChild(fragment);
+    userDialog.querySelector('.setup-similar').classList.remove('hidden');
+  };
+
+  var removeErrorWindow = function () {
+    errorWindow.remove();
+    window.backend.load(createWizards, displayErrorWindow);
+    setupSubmit.removeAttribute('disabled');
+  };
+
   var onErrorWindowClick = function () {
     errorWindow.removeEventListener('click', onErrorWindowClick);
-    document.body.removeChild(errorWindow);
+    removeErrorWindow();
   };
 
   var onErrorWindowKeydown = function (evt) {
     if (evt.key === 'Escape') {
       document.removeEventListener('keydown', onErrorWindowKeydown);
-      onErrorWindowClick();
+      removeErrorWindow();
     }
   };
 
-  var onError = function (errorMessage) {
+  var displayErrorWindow = function (errorMessage) {
     errorWindow.style = 'display: flex; z-index: 100; justify-content: center; align-items: center; background-color: black; opacity: 0.9; width: 100%; top: 35%; height: 30%;';
     errorWindow.style.position = 'absolute';
     errorWindow.style.fontSize = fontSizeErrorMessage;
@@ -48,25 +68,23 @@
     document.addEventListener('keydown', onErrorWindowKeydown);
   };
 
-  var onLoad = function (wizards) {
-    var fragment = document.createDocumentFragment();
-
-    for (var i = 0; i < NUMBER_WIZARDS; i += 1) {
-      fragment.appendChild(createWizard(wizards[i]));
-    }
-    wizardsContainer.appendChild(fragment);
-    userDialog.querySelector('.setup-similar').classList.remove('hidden');
-  };
-
-  form.addEventListener('submit', function (evt) {
+  var onFormSubmit = function (evt) {
     setupSubmit.setAttribute('disabled', '');
     window.backend.save(new FormData(form), function () {
       window.dialog.closeUserDialog();
       setupSubmit.removeAttribute('disabled');
     },
-    onError);
+    displayErrorWindow);
     evt.preventDefault();
-  });
+  };
 
-  window.backend.load(onLoad, onError);
+  form.addEventListener('submit', onFormSubmit);
+
+  window.backend.load(createWizards, displayErrorWindow);
+
+  window.setup = {
+    createWizard: createWizard,
+    createWizards: createWizards,
+    displayErrorWindow: displayErrorWindow
+  };
 })();
