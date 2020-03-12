@@ -53,8 +53,9 @@
     return wizard;
   };
 
-  var createWizards = function (wizards) {
+  var createWizards = function (wizardsData) {
     var fragment = document.createDocumentFragment();
+    var wizards = wizardsData.slice();
     window.similarWizards = wizards;
     wizards.sort(window.filter.sortWizards);
 
