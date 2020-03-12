@@ -4,7 +4,6 @@
   var NUMBER_WIZARDS = 4;
 
   var userDialog = document.querySelector('.setup');
-  var form = userDialog.querySelector('form');
   var setupSubmit = userDialog.querySelector('.setup-submit');
 
   var similarWizardTemplate = document.querySelector('#similar-wizard-template').content;
@@ -12,31 +11,6 @@
   var errorWindow = document.createElement('div');
 
   var fontSizeErrorMessage = '22px';
-
-  var createWizard = function (wizardData) {
-    var wizard = similarWizardTemplate.cloneNode(true);
-
-    wizard.querySelector('.setup-similar-label').textContent = wizardData.name;
-
-    wizard.querySelector('.wizard-coat').style.fill = wizardData.colorCoat;
-    wizard.querySelector('.wizard-eyes').style.fill = wizardData.colorEyes;
-
-    return wizard;
-  };
-
-  var createWizards = function (wizards) {
-    var fragment = document.createDocumentFragment();
-    window.similarWizards = wizards;
-    wizards.sort(window.filter.sortWizards);
-
-    for (var i = 0; i < NUMBER_WIZARDS; i += 1) {
-      fragment.appendChild(window.setup.createWizard(wizards[i]));
-    }
-
-    wizardsContainer.innerHTML = '';
-    wizardsContainer.appendChild(fragment);
-    userDialog.querySelector('.setup-similar').classList.remove('hidden');
-  };
 
   var removeErrorWindow = function () {
     errorWindow.remove();
@@ -68,17 +42,30 @@
     document.addEventListener('keydown', onErrorWindowKeydown);
   };
 
-  var onFormSubmit = function (evt) {
-    setupSubmit.setAttribute('disabled', '');
-    window.backend.save(new FormData(form), function () {
-      window.dialog.closeUserDialog();
-      setupSubmit.removeAttribute('disabled');
-    },
-    displayErrorWindow);
-    evt.preventDefault();
+  var createWizard = function (wizardData) {
+    var wizard = similarWizardTemplate.cloneNode(true);
+
+    wizard.querySelector('.setup-similar-label').textContent = wizardData.name;
+
+    wizard.querySelector('.wizard-coat').style.fill = wizardData.colorCoat;
+    wizard.querySelector('.wizard-eyes').style.fill = wizardData.colorEyes;
+
+    return wizard;
   };
 
-  form.addEventListener('submit', onFormSubmit);
+  var createWizards = function (wizards) {
+    var fragment = document.createDocumentFragment();
+    window.similarWizards = wizards;
+    wizards.sort(window.filter.sortWizards);
+
+    for (var i = 0; i < NUMBER_WIZARDS; i += 1) {
+      fragment.appendChild(window.setup.createWizard(wizards[i]));
+    }
+
+    wizardsContainer.innerHTML = '';
+    wizardsContainer.appendChild(fragment);
+    userDialog.querySelector('.setup-similar').classList.remove('hidden');
+  };
 
   window.backend.load(createWizards, displayErrorWindow);
 

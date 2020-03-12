@@ -2,9 +2,11 @@
 
 (function () {
   var userDialog = document.querySelector('.setup');
+  var form = userDialog.querySelector('form');
 
   var setupOpen = document.querySelector('.setup-open');
   var setupClose = userDialog.querySelector('.setup-close');
+  var setupSubmit = userDialog.querySelector('.setup-submit');
   var userName = userDialog.querySelector('.setup-user-name');
   var userDialogStartPosition = 'top: 80px; left: 50%;';
   var upload = userDialog.querySelector('.upload');
@@ -20,12 +22,7 @@
   var closeUserDialog = function () {
     userDialog.classList.add('hidden');
     document.removeEventListener('keydown', onUserDialogEscPress);
-  };
-
-  var openUserDialog = function () {
-    userDialog.classList.remove('hidden');
-    userDialog.style.cssText = userDialogStartPosition;
-    document.addEventListener('keydown', onUserDialogEscPress);
+    upload.removeEventListener('mousedown', onUploadMousedown);
   };
 
   var onUserDialogEscPress = function (evt) {
@@ -46,6 +43,12 @@
       closeUserDialog();
     }
   });
+
+  var openUserDialog = function () {
+    userDialog.classList.remove('hidden');
+    userDialog.style.cssText = userDialogStartPosition;
+    document.addEventListener('keydown', onUserDialogEscPress);
+  };
 
   setupOpen.addEventListener('click', function () {
     openUserDialog();
@@ -132,6 +135,17 @@
     document.addEventListener('mouseup', onDocumentMouseUp);
   };
 
+  var onFormSubmit = function (evt) {
+    evt.preventDefault();
+    setupSubmit.setAttribute('disabled', '');
+    window.backend.save(new FormData(form), function () {
+      closeUserDialog();
+      setupSubmit.removeAttribute('disabled');
+    },
+    window.setup.displayErrorWindow);
+  };
+
+  form.addEventListener('submit', onFormSubmit);
   upload.addEventListener('mousedown', onUploadMousedown);
 
   window.dialog = {
