@@ -5,36 +5,45 @@
   var wizardCoatColor = document.querySelector('input[name="coat-color"]');
   var wizardEyesColor = document.querySelector('input[name="eyes-color"]');
 
+  var highLevel = 2;
+  var middleLevel = 1;
+  var lowLevel = 0;
+
+  var levelHeightenInOrder = 1;
+  var levelLoweringInOrder = -1;
+
+
+  var noDifference = 0;
+
   var calculateLevel = function (wizard) {
-    var level = 0;
+    var level = lowLevel;
 
     if (wizard.colorCoat === wizardCoatColor.value) {
-      level += 2;
+      level += highLevel;
     }
 
     if (wizard.colorEyes === wizardEyesColor.value) {
-      level += 1;
+      level += middleLevel;
     }
     return level;
   };
 
   var sortNames = function (left, right) {
     if (left > right) {
-      return 1;
+      return levelHeightenInOrder;
     } else if (left < right) {
-      return -1;
+      return levelLoweringInOrder;
     } else {
-      return 0;
+      return noDifference;
     }
   };
 
   var sortWizards = function (left, right) {
     var difference = calculateLevel(right) - calculateLevel(left);
 
-    if (difference === 0) {
+    if (difference === noDifference) {
       difference = sortNames(left.name, right.name);
     }
-
     return difference;
   };
 
